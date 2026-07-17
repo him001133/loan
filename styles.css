@@ -346,6 +346,37 @@ button:hover {
   gap: 14px;
 }
 
+/* Timezone calculator styles */
+.timezone-card {
+  padding: 20px;
+}
+
+.timezone-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.timezone-controls label {
+  display: block;
+  margin-top: 10px;
+  font-weight: 700;
+}
+
+.timezone-output {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fbfdff;
+}
+
+@media (max-width: 820px) {
+  .timezone-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .result-box,
 .insight-card {
   padding: 16px;
