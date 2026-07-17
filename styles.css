@@ -512,6 +512,58 @@ button:hover {
   .comparison-table td {
     padding: 8px;
   }
+
+  .tools-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .benefits-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cta-card {
+    padding: 24px !important;
+  }
+
+  .cta-actions {
+    flex-direction: column;
+  }
+
+  .cta-actions a {
+    width: 100%;
+  }
+
+  .tool-card {
+    padding: 20px;
+  }
+
+  .tool-icon {
+    font-size: 2rem;
+  }
+
+  .tool-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .benefit-box {
+    padding: 16px;
+  }
+
+  .benefit-icon {
+    font-size: 1.5rem;
+  }
+
+  .stat-box {
+    padding: 16px;
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
+  }
 }
 
 .result-box,
