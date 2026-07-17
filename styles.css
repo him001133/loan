@@ -893,3 +893,191 @@ tr:last-child td {
   border-bottom: none;
 }
 
+/* Tools Grid & Cards */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.tool-card {
+  padding: 24px;
+  background: #f8fbff;
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.3s ease;
+}
+
+.tool-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 8px 24px rgba(15, 111, 255, 0.15);
+  transform: translateY(-4px);
+}
+
+.tool-card.coming-soon {
+  opacity: 0.7;
+}
+
+.tool-card.coming-soon:hover {
+  transform: none;
+  box-shadow: 0 4px 12px rgba(15, 111, 255, 0.08);
+}
+
+.tool-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.tool-card h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--text);
+}
+
+.tool-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+  flex-grow: 1;
+}
+
+.tool-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.feature-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  background: rgba(15, 111, 255, 0.1);
+  color: var(--primary);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.tool-link {
+  display: inline-block;
+  padding: 10px 16px;
+  background: var(--primary);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 999px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  text-align: center;
+  margin-top: auto;
+}
+
+.tool-link:hover {
+  background: var(--primary-dark);
+}
+
+.tool-link.disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.tool-link.disabled:hover {
+  background: #ccc;
+}
+
+/* Benefits Grid */
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.benefit-box {
+  padding: 20px;
+  background: linear-gradient(135deg, #f8fbff 0%, #eefdfd 100%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.benefit-icon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.benefit-box h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.benefit-box p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* CTA Card */
+.cta-card {
+  padding: 40px !important;
+  background: linear-gradient(135deg, #0f6fff 0%, #083f94 100%);
+  color: #fff;
+  text-align: center;
+}
+
+.cta-card .section-heading h2 {
+  color: #fff;
+  margin: 0 0 8px;
+}
+
+.cta-card .section-heading p {
+  color: #e8f0ff;
+  margin: 0 0 20px;
+}
+
+.cta-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.stat-box {
+  padding: 24px;
+  background: linear-gradient(135deg, #f8fbff 0%, #eef6ff 100%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.stat-number {
+  display: block;
+  font-size: 2rem;
+  color: var(--primary);
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
