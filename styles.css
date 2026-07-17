@@ -80,11 +80,6 @@ body {
   gap: 18px;
 }
 
-.nav-list a {
-  color: #fff;
-  opacity: 0.95;
-}
-
 .page-shell {
   max-width: 1160px;
   margin: 0 auto;
