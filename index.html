@@ -22,6 +22,7 @@
       <nav class="nav">
         <ul class="nav-list">
           <li><a class="nav-link" href="#features">Features</a></li>
+          <li><a class="nav-link" href="#comparison">Compare</a></li>
           <li><a class="nav-link" href="#calculator">Calculator</a></li>
           <li><a class="nav-link" href="#schedule">Schedule</a></li>
           <li><a class="nav-link" href="#about">About</a></li>
@@ -96,6 +97,35 @@
             <strong id="tz-output">—</strong>
             <p class="note">Converts from your browser local time to the selected timezone.</p>
           </div>
+        </div>
+      </section>
+
+      <section id="comparison" class="card comparison-card">
+        <div class="section-heading">
+          <p class="eyebrow">Compare scenarios</p>
+          <h2>Side-by-side loan comparison</h2>
+        </div>
+        <div class="comparison-controls">
+          <button type="button" id="save-scenario-btn" class="primary-btn">+ Save current as scenario</button>
+          <button type="button" id="clear-scenarios-btn" class="secondary-btn">Clear all</button>
+        </div>
+        <div id="scenarios-container" class="scenarios-container">
+          <div class="empty-state">
+            <p>Save your first scenario to start comparing loans.</p>
+          </div>
+        </div>
+        <div id="comparison-table" class="comparison-table-wrap" style="display: none;">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th id="scenario-1-header">Scenario 1</th>
+                <th id="scenario-2-header">Scenario 2</th>
+                <th id="scenario-3-header">Scenario 3</th>
+              </tr>
+            </thead>
+            <tbody id="comparison-body"></tbody>
+          </table>
         </div>
       </section>
 
