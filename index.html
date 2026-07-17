@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Indian Education Loan Calculator</title>
+    <meta
+      name="description"
+      content="Estimate education loan EMI, grace period impact, and repayment schedule in Indian rupees."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="card hero-card">
+        <p class="eyebrow">Education loan planning</p>
+        <h1>Indian Education Loan Calculator</h1>
+        <p class="hero-copy">
+          Model your EMI in INR, test the impact of a moratorium, and review a repayment schedule tailored for student finance planning.
+        </p>
+      </section>
+
+      <section class="card calculator-card">
+        <form id="loan-form" novalidate>
+          <div class="control-grid">
+            <div class="field-group">
+              <label for="loan-amount">
+                Loan amount
+                <span class="value-pill" id="loan-amount-value">₹50,00,000</span>
+              </label>
+              <input id="loan-amount-range" type="range" min="100000" max="50000000" step="100000" value="5000000" />
+              <input id="loan-amount" name="loanAmount" type="number" min="100000" step="100000" value="5000000" required />
+            </div>
+
+            <div class="field-group">
+              <label for="interest-rate">
+                Interest rate
+                <span class="value-pill" id="interest-rate-value">10.5%</span>
+              </label>
+              <input id="interest-rate-range" type="range" min="0" max="20" step="0.1" value="10.5" />
+              <input id="interest-rate" name="interestRate" type="number" min="0" max="20" step="0.1" value="10.5" required />
+            </div>
+
+            <div class="field-group">
+              <label for="tenure-years">
+                Tenure
+                <span class="value-pill" id="tenure-years-value">5 years</span>
+              </label>
+              <input id="tenure-years-range" type="range" min="1" max="20" step="1" value="5" />
+              <input id="tenure-years" name="tenureYears" type="number" min="1" max="20" step="1" value="5" required />
+            </div>
+
+            <div class="field-group">
+              <label for="grace-months">
+                Moratorium / grace period
+                <span class="value-pill" id="grace-months-value">0 months</span>
+              </label>
+              <input id="grace-months-range" type="range" min="0" max="24" step="1" value="0" />
+              <input id="grace-months" name="graceMonths" type="number" min="0" max="24" step="1" value="0" required />
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="submit">Calculate plan</button>
+            <button type="button" id="reset-btn" class="secondary-btn">Reset</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card results-card" aria-live="polite">
+        <div class="results-grid">
+          <article class="result-box">
+            <span class="result-label">Monthly EMI</span>
+            <strong id="emi-value">₹0</strong>
+          </article>
+          <article class="result-box">
+            <span class="result-label">Total interest</span>
+            <strong id="interest-value">₹0</strong>
+          </article>
+          <article class="result-box">
+            <span class="result-label">Total payable</span>
+            <strong id="payable-value">₹0</strong>
+          </article>
+        </div>
+
+        <div class="insight-grid">
+          <article class="insight-card accent-card">
+            <h3>Grace impact</h3>
+            <p id="grace-summary">No grace period selected.</p>
+          </article>
+          <article class="insight-card">
+            <h3>Repayment snapshot</h3>
+            <p id="snapshot-summary">Your plan will be displayed here.</p>
+          </article>
+        </div>
+
+        <div class="chart-wrap">
+          <canvas id="summary-chart" width="420" height="220"></canvas>
+        </div>
+        <p class="note">This estimate uses standard EMI calculations and capitalizes interest during the selected grace period.</p>
+      </section>
+
+      <section class="card schedule-card">
+        <div class="schedule-head">
+          <h2>Repayment schedule</h2>
+          <p id="schedule-caption">A monthly repayment plan will appear here.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Payment</th>
+                <th>Interest</th>
+                <th>Principal</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
+            <tbody id="schedule-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
