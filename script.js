@@ -373,16 +373,20 @@ if (tzSelect && tzDatetime) {
     const referenceTzs = ['Asia/Kolkata', 'Europe/London', 'America/New_York', 'America/Los_Angeles', 'Asia/Tokyo', 'Australia/Sydney'];
     
     function updateReferenceGrid() {
-      referenceGrid.innerHTML = referenceTzs.map(tz => {
-        const now = new Date();
-        const time = formatInZone(now, tz);
-        return `
-          <div class="tz-ref-card">
-            <p class="tz-name">${tz}</p>
-            <strong class="tz-time">${time}</strong>
-          </div>
-        `;
-      }).join('');
+      try {
+        referenceGrid.innerHTML = referenceTzs.map(tz => {
+          const now = new Date();
+          const time = formatInZone(now, tz);
+          return `
+            <div class="tz-ref-card">
+              <p class="tz-name">${tz}</p>
+              <strong class="tz-time">${time}</strong>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error('Error updating reference grid:', err);
+      }
     }
     
     updateReferenceGrid();
@@ -393,8 +397,14 @@ if (tzSelect && tzDatetime) {
   const currentTimeEl = document.getElementById('current-time');
   if (currentTimeEl) {
     function updateCurrentTime() {
-      const now = new Date();
-      currentTimeEl.textContent = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false });
+      try {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        currentTimeEl.textContent = `${hours}:${minutes}`;
+      } catch (err) {
+        console.error('Error updating current time:', err);
+      }
     }
     updateCurrentTime();
     setInterval(updateCurrentTime, 1000);
