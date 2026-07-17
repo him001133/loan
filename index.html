@@ -11,16 +11,61 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <header class="topbar">
+      <div class="brand-block">
+        <div class="brand-mark">₹</div>
+        <div>
+          <p class="brand-name">EduLoan Planner</p>
+          <p class="brand-tag">Indian education finance made simpler</p>
+        </div>
+      </div>
+      <a class="nav-link" href="#calculator">Open calculator</a>
+    </header>
+
     <main class="page-shell">
       <section class="card hero-card">
-        <p class="eyebrow">Education loan planning</p>
-        <h1>Indian Education Loan Calculator</h1>
-        <p class="hero-copy">
-          Model your EMI in INR, evaluate interest-only repayment, add an advance payment, and review a repayment schedule tailored for student finance planning.
-        </p>
+        <div class="hero-content">
+          <div>
+            <p class="eyebrow">Education loan planning</p>
+            <h1>Plan your study loan with confidence.</h1>
+            <p class="hero-copy">
+              Model your EMI in INR, compare grace periods, test interest-only repayment, and see how an advance payment can reduce your overall burden.
+            </p>
+            <div class="hero-actions">
+              <a class="button-link" href="#calculator">Try the calculator</a>
+              <a class="button-link secondary-link" href="#features">Explore features</a>
+            </div>
+          </div>
+          <div class="hero-badge">
+            <p>Smart planning</p>
+            <strong>₹ 0.00</strong>
+            <span>estimated monthly burden</span>
+          </div>
+        </div>
       </section>
 
-      <section class="card calculator-card">
+      <section id="features" class="card feature-card">
+        <div class="section-heading">
+          <p class="eyebrow">Why students use it</p>
+          <h2>Everything you need to understand your repayment journey</h2>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-box">
+            <h3>Clear EMI estimates</h3>
+            <p>Instantly see monthly repayments based on your loan amount, rate, and tenure.</p>
+          </article>
+          <article class="feature-box">
+            <h3>Grace period insight</h3>
+            <p>Understand how a moratorium changes your balance before repayment begins.</p>
+          </article>
+          <article class="feature-box">
+            <h3>Flexible repayment options</h3>
+            <p>Compare interest-only months and advance payments before you sign up.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="calculator" class="card calculator-card">
         <form id="loan-form" novalidate>
           <div class="control-grid">
             <div class="field-group">
