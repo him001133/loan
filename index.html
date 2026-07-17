@@ -72,6 +72,33 @@
         </div>
       </section>
 
+      <section id="timezone" class="card timezone-card">
+        <div class="section-heading">
+          <p class="eyebrow">Utilities</p>
+          <h2>Timezone calculator</h2>
+        </div>
+        <div class="timezone-grid">
+          <div class="timezone-controls">
+            <label for="tz-datetime">Your local date & time</label>
+            <input id="tz-datetime" type="datetime-local" />
+
+            <label for="tz-target">Target timezone</label>
+            <select id="tz-target"></select>
+
+            <div class="actions">
+              <button id="tz-convert" type="button">Convert</button>
+              <button id="tz-now" type="button" class="secondary-btn">Show current in timezone</button>
+            </div>
+          </div>
+
+          <div class="timezone-output">
+            <p class="result-label">Converted time</p>
+            <strong id="tz-output">—</strong>
+            <p class="note">Converts from your browser local time to the selected timezone.</p>
+          </div>
+        </div>
+      </section>
+
       <section id="calculator" class="card calculator-card">
         <form id="loan-form" novalidate>
           <div class="control-grid">
