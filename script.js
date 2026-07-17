@@ -286,3 +286,80 @@ controls.forEach(syncControl);
 interestOnlyMonthsInput.disabled = true;
 interestOnlyMonthsRange.disabled = true;
 updateResults();
+
+// Timezone calculator logic
+const tzSelect = document.getElementById('tz-target');
+const tzDatetime = document.getElementById('tz-datetime');
+const tzOutput = document.getElementById('tz-output');
+const tzConvertBtn = document.getElementById('tz-convert');
+const tzNowBtn = document.getElementById('tz-now');
+
+const commonTimezones = [
+  'UTC',
+  'Asia/Kolkata',
+  'Europe/London',
+  'Europe/Berlin',
+  'America/New_York',
+  'America/Los_Angeles',
+  'Asia/Tokyo',
+  'Australia/Sydney',
+  'Asia/Dubai',
+  'Africa/Johannesburg'
+];
+
+function populateTimezones() {
+  tzSelect.innerHTML = '';
+  const list = (Intl.supportedValuesOf && Intl.supportedValuesOf('timeZone')) || commonTimezones;
+  const candidates = list.includes('Asia/Kolkata') ? list : commonTimezones;
+  candidates.forEach((tz) => {
+    const opt = document.createElement('option');
+    opt.value = tz;
+    opt.textContent = tz;
+    tzSelect.appendChild(opt);
+  });
+}
+
+function formatInZone(date, timeZone) {
+  try {
+    return new Intl.DateTimeFormat('en-IN', {
+      timeZone,
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    }).format(date);
+  } catch (e) {
+    return 'Unsupported timezone';
+  }
+}
+
+function convertLocalToTimezone() {
+  const target = tzSelect.value;
+  const localValue = tzDatetime.value;
+  if (!localValue) {
+    tzOutput.textContent = 'Please choose a local date & time.';
+    return;
+  }
+  const localDate = new Date(localValue);
+  tzOutput.textContent = formatInZone(localDate, target);
+}
+
+function showNowInTimezone() {
+  const target = tzSelect.value;
+  const now = new Date();
+  tzOutput.textContent = formatInZone(now, target);
+}
+
+populateTimezones();
+// set default datetime to now (local)
+(function setDefaultDatetime() {
+  const now = new Date();
+  const tzLocal = now.toISOString().slice(0,16);
+  tzDatetime.value = tzLocal;
+})();
+
+tzConvertBtn.addEventListener('click', convertLocalToTimezone);
+tzNowBtn.addEventListener('click', showNowInTimezone);
