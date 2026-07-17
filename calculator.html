@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Education Loan Calculator | EduLoan Planner</title>
+    <meta name="description" content="Estimate education loan EMI, grace period impact, and repayment schedule in Indian rupees." />
+    <meta name="google-site-verification" content="9NoZDg2IGK6fxFpJTh0Nt341arVPFT_Xz06VqUZ4-30" />
+    <meta name="keywords" content="education loan calculator, EMI calculator, loan comparison, Indian education finance" />
+    <meta name="author" content="EduLoan Planner" />
+    <link rel="canonical" href="https://him001133.github.io/loan/index.html" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand-block">
+        <div class="brand-mark">₹</div>
+        <div>
+          <p class="brand-name">EduLoan Planner</p>
+          <p class="brand-tag">Indian education finance made simpler</p>
+        </div>
+      </div>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li><a class="nav-link" href="index.html">Home</a></li>
+          <li><a class="nav-link" href="#features">Features</a></li>
+          <li><a class="nav-link" href="#comparison">Compare</a></li>
+          <li><a class="nav-link" href="#calculator">Calculator</a></li>
+          <li><a class="nav-link" href="timezone.html">Timezone</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="page-shell">
+      <section class="card hero-card">
+        <div class="hero-content">
+          <div>
+            <p class="eyebrow">Education loan planning</p>
+            <h1>Plan your study loan with confidence.</h1>
+            <p class="hero-copy">
+              Model your EMI in INR, compare grace periods, test interest-only repayment, and see how an advance payment can reduce your overall burden.
+            </p>
+            <div class="hero-actions">
+              <a class="button-link" href="#calculator">Try the calculator</a>
+              <a class="button-link secondary-link" href="#features">Explore features</a>
+            </div>
+          </div>
+          <div class="hero-badge">
+            <p>Smart planning</p>
+            <strong>₹ 0.00</strong>
+            <span>estimated monthly burden</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="card feature-card">
+        <div class="section-heading">
+          <p class="eyebrow">Why students use it</p>
+          <h2>Everything you need to understand your repayment journey</h2>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-box">
+            <h3>Clear EMI estimates</h3>
+            <p>Instantly see monthly repayments based on your loan amount, rate, and tenure.</p>
+          </article>
+          <article class="feature-box">
+            <h3>Grace period insight</h3>
+            <p>Understand how a moratorium changes your balance before repayment begins.</p>
+          </article>
+          <article class="feature-box">
+            <h3>Flexible repayment options</h3>
+            <p>Compare interest-only months and advance payments before you sign up.</p>
+          </article>
+        </div>
+      </section>
+
+
+
+      <section id="comparison" class="card comparison-card">
+        <div class="section-heading">
+          <p class="eyebrow">Compare scenarios</p>
+          <h2>Side-by-side loan comparison</h2>
+        </div>
+        <div class="comparison-controls">
+          <button type="button" id="save-scenario-btn" class="primary-btn">+ Save current as scenario</button>
+          <button type="button" id="clear-scenarios-btn" class="secondary-btn">Clear all</button>
+        </div>
+        <div id="scenarios-container" class="scenarios-container">
+          <div class="empty-state">
+            <p>Save your first scenario to start comparing loans.</p>
+          </div>
+        </div>
+        <div id="comparison-table" class="comparison-table-wrap" style="display: none;">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th id="scenario-1-header">Scenario 1</th>
+                <th id="scenario-2-header">Scenario 2</th>
+                <th id="scenario-3-header">Scenario 3</th>
+              </tr>
+            </thead>
+            <tbody id="comparison-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="calculator" class="card calculator-card">
+        <form id="loan-form" novalidate>
+          <div class="control-grid">
+            <div class="field-group">
+              <label for="loan-amount">
+                Loan amount
+                <span class="value-pill" id="loan-amount-value">₹50,00,000</span>
+              </label>
+              <input id="loan-amount-range" type="range" min="100000" max="50000000" step="100000" value="5000000" />
+              <input id="loan-amount" name="loanAmount" type="number" min="100000" step="100000" value="5000000" required />
+            </div>
+
+            <div class="field-group">
+              <label for="interest-rate">
+                Interest rate
+                <span class="value-pill" id="interest-rate-value">10.5%</span>
+              </label>
+              <input id="interest-rate-range" type="range" min="0" max="20" step="0.1" value="10.5" />
+              <input id="interest-rate" name="interestRate" type="number" min="0" max="20" step="0.1" value="10.5" required />
+            </div>
+
+            <div class="field-group">
+              <label for="tenure-years">
+                Tenure
+                <span class="value-pill" id="tenure-years-value">5 years</span>
+              </label>
+              <input id="tenure-years-range" type="range" min="1" max="20" step="1" value="5" />
+              <input id="tenure-years" name="tenureYears" type="number" min="1" max="20" step="1" value="5" required />
+            </div>
+
+            <div class="field-group">
+              <label for="grace-months">
+                Moratorium / grace period
+                <span class="value-pill" id="grace-months-value">0 months</span>
+              </label>
+              <input id="grace-months-range" type="range" min="0" max="24" step="1" value="0" />
+              <input id="grace-months" name="graceMonths" type="number" min="0" max="24" step="1" value="0" required />
+            </div>
+
+            <div class="field-group checkbox-field">
+              <label for="interest-only-toggle">
+                <span>Pay only interest during selected period</span>
+                <input id="interest-only-toggle" name="interestOnly" type="checkbox" />
+              </label>
+            </div>
+
+            <div class="field-group">
+              <label for="interest-only-months">
+                Interest-only period
+                <span class="value-pill" id="interest-only-months-value">0 months</span>
+              </label>
+              <input id="interest-only-months-range" type="range" min="0" max="24" step="1" value="0" />
+              <input id="interest-only-months" name="interestOnlyMonths" type="number" min="0" max="24" step="1" value="0" required />
+            </div>
+
+            <div class="field-group">
+              <label for="advance-payment">
+                Advance payment
+                <span class="value-pill" id="advance-payment-value">₹0</span>
+              </label>
+              <input id="advance-payment-range" type="range" min="0" max="50000000" step="10000" value="0" />
+              <input id="advance-payment" name="advancePayment" type="number" min="0" max="50000000" step="10000" value="0" />
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="submit">Calculate plan</button>
+            <button type="button" id="reset-btn" class="secondary-btn">Reset</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card results-card" aria-live="polite">
+        <div class="results-grid">
+          <article class="result-box">
+            <span class="result-label">Monthly EMI</span>
+            <strong id="emi-value">₹0</strong>
+          </article>
+          <article class="result-box">
+            <span class="result-label">Total interest</span>
+            <strong id="interest-value">₹0</strong>
+          </article>
+          <article class="result-box">
+            <span class="result-label">Total payable</span>
+            <strong id="payable-value">₹0</strong>
+          </article>
+        </div>
+
+        <div class="insight-grid">
+          <article class="insight-card accent-card">
+            <h3>Grace impact</h3>
+            <p id="grace-summary">No grace period selected.</p>
+          </article>
+          <article class="insight-card">
+            <h3>Repayment snapshot</h3>
+            <p id="snapshot-summary">Your plan will be displayed here.</p>
+          </article>
+        </div>
+
+        <div class="chart-wrap">
+          <canvas id="summary-chart" width="420" height="220"></canvas>
+        </div>
+        <p class="note">This estimate uses standard EMI calculations and applies interest-only or grace-period handling when selected.</p>
+      </section>
+
+      <section class="card schedule-card">
+        <div class="schedule-head">
+          <h2>Repayment schedule</h2>
+          <p id="schedule-caption">A monthly repayment plan will appear here.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Payment</th>
+                <th>Interest</th>
+                <th>Principal</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
+            <tbody id="schedule-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand-mark small">₹</div>
+          <div>
+            <p class="brand-name">EduLoan Planner</p>
+            <p class="brand-tag">Made for students in India</p>
+          </div>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="calculator.html">Calculator</a>
+          <a href="timezone.html">Timezone</a>
+          <a href="about.html">About Us</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-legal">
+          <p>© 2026 EduLoan Planner. For planning only — not financial advice.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
