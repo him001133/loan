@@ -536,6 +536,23 @@ tr:last-child td {
   font-size: 0.9rem;
 }
 
+/* Page content styles */
+.page-shell a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.2s ease;
+}
+
+.page-shell a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.page-shell ul {
+  line-height: 1.8;
+}
+
 .brand-mark.small {
   width: 36px;
   height: 36px;
