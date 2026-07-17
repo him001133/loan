@@ -287,7 +287,7 @@ interestOnlyMonthsInput.disabled = true;
 interestOnlyMonthsRange.disabled = true;
 updateResults();
 
-// Timezone calculator logic
+// Timezone calculator logic - only runs on timezone.html page
 const tzSelect = document.getElementById('tz-target');
 const tzDatetime = document.getElementById('tz-datetime');
 const tzOutput = document.getElementById('tz-output');
