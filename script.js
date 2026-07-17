@@ -8,6 +8,10 @@ const scheduleBody = document.getElementById('schedule-body');
 const scheduleCaption = document.getElementById('schedule-caption');
 const resetBtn = document.getElementById('reset-btn');
 const chartCanvas = document.getElementById('summary-chart');
+const interestOnlyToggle = document.getElementById('interest-only-toggle');
+const interestOnlyMonthsInput = document.getElementById('interest-only-months');
+const interestOnlyMonthsRange = document.getElementById('interest-only-months-range');
+const interestOnlyMonthsDisplay = document.getElementById('interest-only-months-value');
 
 const currencyFormatter = new Intl.NumberFormat('en-IN', {
   style: 'currency',
@@ -40,44 +44,60 @@ const controls = [
     display: document.getElementById('grace-months-value'),
     formatter: (value) => `${Math.round(value)} month${Math.round(value) === 1 ? '' : 's'}`,
   },
+  {
+    range: interestOnlyMonthsRange,
+    input: interestOnlyMonthsInput,
+    display: interestOnlyMonthsDisplay,
+    formatter: (value) => `${Math.round(value)} month${Math.round(value) === 1 ? '' : 's'}`,
+  },
+  {
+    range: document.getElementById('advance-payment-range'),
+    input: document.getElementById('advance-payment'),
+    display: document.getElementById('advance-payment-value'),
+    formatter: (value) => formatCurrency(value),
+  },
 ];
 
 function formatCurrency(value) {
   return currencyFormatter.format(value);
 }
 
-function calculateEmi(principal, annualRate, years) {
-  if (principal <= 0 || annualRate < 0 || years <= 0) {
+function calculateEmi(principal, annualRate, months) {
+  if (principal <= 0 || annualRate < 0 || months <= 0) {
     return null;
   }
 
   const monthlyRate = annualRate / 100 / 12;
-  const totalMonths = years * 12;
-
   if (monthlyRate === 0) {
-    return principal / totalMonths;
+    return principal / months;
   }
 
-  const factor = Math.pow(1 + monthlyRate, totalMonths);
+  const factor = Math.pow(1 + monthlyRate, months);
   return (principal * monthlyRate * factor) / (factor - 1);
 }
 
 function syncControl(control) {
   const rangeValue = Number(control.range.value);
-  const clampedValue = Math.min(Math.max(rangeValue, Number(control.input.min) || 0), Number(control.input.max) || rangeValue);
+  const minValue = Number(control.input.min) || 0;
+  const maxValue = Number(control.input.max) || rangeValue;
+  const clampedValue = Math.min(Math.max(rangeValue, minValue), maxValue);
   control.range.value = clampedValue;
   control.input.value = clampedValue;
   control.display.textContent = control.formatter(clampedValue);
 }
 
-function buildSchedule(principal, annualRate, years, graceMonths, emi) {
+function buildSchedule(principal, annualRate, years, graceMonths, interestOnlyEnabled, interestOnlyMonths, advancePayment) {
   const monthlyRate = annualRate / 100 / 12;
   const totalMonths = years * 12;
+  const effectivePrincipal = Math.max(principal - advancePayment, 0);
   const rows = [];
-  let balance = principal;
+  let balance = effectivePrincipal;
+  let totalInterest = 0;
+  let paymentMonths = 0;
 
   for (let month = 1; month <= graceMonths; month += 1) {
     const interest = balance * monthlyRate;
+    totalInterest += interest;
     balance += interest;
     rows.push({
       month: `G${month}`,
@@ -89,13 +109,34 @@ function buildSchedule(principal, annualRate, years, graceMonths, emi) {
     });
   }
 
-  for (let month = 1; month <= totalMonths; month += 1) {
+  if (interestOnlyEnabled && interestOnlyMonths > 0) {
+    const interestOnlyPeriod = Math.min(interestOnlyMonths, totalMonths - graceMonths);
+    for (let month = 1; month <= interestOnlyPeriod; month += 1) {
+      const interest = balance * monthlyRate;
+      totalInterest += interest;
+      rows.push({
+        month: `I${month}`,
+        payment: interest,
+        interest,
+        principal: 0,
+        balance,
+        type: 'Interest-only',
+      });
+    }
+  }
+
+  const remainingMonths = Math.max(totalMonths - graceMonths - (interestOnlyEnabled ? Math.min(interestOnlyMonths, totalMonths - graceMonths) : 0), 1);
+  const repaymentEmi = calculateEmi(balance, annualRate, remainingMonths);
+
+  for (let month = 1; month <= remainingMonths; month += 1) {
     const interest = balance * monthlyRate;
-    const principalPaid = Math.min(emi - interest, balance);
+    const principalPaid = Math.min(repaymentEmi - interest, balance);
     balance = Math.max(0, balance - principalPaid);
+    paymentMonths += 1;
+    totalInterest += interest;
     rows.push({
-      month,
-      payment: emi,
+      month: paymentMonths,
+      payment: repaymentEmi,
       interest,
       principal: principalPaid,
       balance,
@@ -103,7 +144,13 @@ function buildSchedule(principal, annualRate, years, graceMonths, emi) {
     });
   }
 
-  return rows;
+  return {
+    rows,
+    totalInterest,
+    repaymentEmi,
+    effectivePrincipal,
+    totalPayable: advancePayment + effectivePrincipal + totalInterest,
+  };
 }
 
 function drawChart(principal, interest, payable) {
@@ -151,8 +198,11 @@ function updateResults(event) {
   const annualRate = Number(formData.get('interestRate'));
   const years = Number(formData.get('tenureYears'));
   const graceMonths = Number(formData.get('graceMonths'));
+  const interestOnlyEnabled = interestOnlyToggle.checked;
+  const interestOnlyMonths = Number(formData.get('interestOnlyMonths'));
+  const advancePayment = Number(formData.get('advancePayment'));
 
-  const emi = calculateEmi(principal, annualRate, years);
+  const emi = calculateEmi(principal, annualRate, years * 12);
 
   if (!emi) {
     emiValue.textContent = '₹0';
@@ -165,30 +215,29 @@ function updateResults(event) {
     return;
   }
 
-  const totalMonths = years * 12;
-  const graceInterest = graceMonths > 0 ? principal * (annualRate / 100 / 12) * graceMonths : 0;
-  const effectivePrincipal = principal + graceInterest;
-  const adjustedEmi = calculateEmi(effectivePrincipal, annualRate, years);
-  const totalPayable = adjustedEmi * totalMonths;
-  const totalInterest = totalPayable - principal;
+  const plan = buildSchedule(principal, annualRate, years, graceMonths, interestOnlyEnabled, interestOnlyMonths, advancePayment);
+  const { rows, totalInterest, totalPayable, repaymentEmi, effectivePrincipal } = plan;
 
-  emiValue.textContent = formatCurrency(adjustedEmi);
+  emiValue.textContent = formatCurrency(repaymentEmi || emi);
   interestValue.textContent = formatCurrency(totalInterest);
   payableValue.textContent = formatCurrency(totalPayable);
 
   if (graceMonths > 0) {
-    graceSummary.textContent = `Your moratorium adds ₹${Math.round(graceInterest).toLocaleString('en-IN')} of interest before repayment starts.`;
+    graceSummary.textContent = `Your moratorium adds interest before repayment begins, and an advance payment of ${formatCurrency(advancePayment)} lowers the financed balance to ${formatCurrency(effectivePrincipal)}.`;
   } else {
-    graceSummary.textContent = 'No grace period selected.';
+    graceSummary.textContent = interestOnlyEnabled && interestOnlyMonths > 0
+      ? `You are paying only interest for ${interestOnlyMonths} month${interestOnlyMonths === 1 ? '' : 's'} before regular repayment starts.`
+      : 'No grace or interest-only period selected.';
   }
 
-  snapshotSummary.textContent = `A ${years}-year plan with ${graceMonths} month${graceMonths === 1 ? '' : 's'} of grace creates an estimated EMI of ${formatCurrency(adjustedEmi)}.`;
+  snapshotSummary.textContent = interestOnlyEnabled && interestOnlyMonths > 0
+    ? `A ${years}-year plan with ${interestOnlyMonths} month${interestOnlyMonths === 1 ? '' : 's'} of interest-only repayment creates an EMI of ${formatCurrency(repaymentEmi || emi)} after that phase.`
+    : `A ${years}-year plan with ${graceMonths} month${graceMonths === 1 ? '' : 's'} of grace creates an estimated EMI of ${formatCurrency(repaymentEmi || emi)}.`;
 
-  const rows = buildSchedule(principal, annualRate, years, graceMonths, adjustedEmi);
   scheduleCaption.textContent = `Showing ${Math.min(rows.length, 24)} of ${rows.length} entries for a ${years}-year plan.`;
   scheduleBody.innerHTML = rows.slice(0, 24).map((row) => `
     <tr>
-      <td>${row.type === 'Grace' ? row.month : row.month}</td>
+      <td>${row.type === 'Repayment' ? row.month : row.month}</td>
       <td>${row.payment === 0 ? '—' : formatCurrency(row.payment)}</td>
       <td>${formatCurrency(row.interest)}</td>
       <td>${row.principal === 0 ? '—' : formatCurrency(row.principal)}</td>
@@ -196,7 +245,7 @@ function updateResults(event) {
     </tr>
   `).join('');
 
-  drawChart(principal, totalInterest, totalPayable);
+  drawChart(effectivePrincipal, totalInterest, totalPayable);
 }
 
 controls.forEach((control) => {
@@ -211,12 +260,29 @@ controls.forEach((control) => {
   });
 });
 
+interestOnlyToggle.addEventListener('change', () => {
+  interestOnlyMonthsInput.disabled = !interestOnlyToggle.checked;
+  interestOnlyMonthsRange.disabled = !interestOnlyToggle.checked;
+  if (!interestOnlyToggle.checked) {
+    interestOnlyMonthsInput.value = 0;
+    interestOnlyMonthsRange.value = 0;
+    interestOnlyMonthsDisplay.textContent = '0 months';
+  }
+  updateResults();
+});
+
 form.addEventListener('submit', updateResults);
 resetBtn.addEventListener('click', () => {
   form.reset();
   controls.forEach(syncControl);
+  interestOnlyToggle.checked = false;
+  interestOnlyMonthsInput.disabled = true;
+  interestOnlyMonthsRange.disabled = true;
+  interestOnlyMonthsDisplay.textContent = '0 months';
   updateResults();
 });
 
 controls.forEach(syncControl);
+interestOnlyMonthsInput.disabled = true;
+interestOnlyMonthsRange.disabled = true;
 updateResults();

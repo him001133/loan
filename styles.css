@@ -92,6 +92,19 @@ h3 {
   background: #fbfdff;
 }
 
+.checkbox-field {
+  align-content: center;
+}
+
+.checkbox-field label {
+  justify-content: space-between;
+}
+
+.checkbox-field input {
+  width: auto;
+  accent-color: var(--primary);
+}
+
 label {
   display: flex;
   align-items: center;

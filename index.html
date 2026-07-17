@@ -16,7 +16,7 @@
         <p class="eyebrow">Education loan planning</p>
         <h1>Indian Education Loan Calculator</h1>
         <p class="hero-copy">
-          Model your EMI in INR, test the impact of a moratorium, and review a repayment schedule tailored for student finance planning.
+          Model your EMI in INR, evaluate interest-only repayment, add an advance payment, and review a repayment schedule tailored for student finance planning.
         </p>
       </section>
 
@@ -58,6 +58,31 @@
               <input id="grace-months-range" type="range" min="0" max="24" step="1" value="0" />
               <input id="grace-months" name="graceMonths" type="number" min="0" max="24" step="1" value="0" required />
             </div>
+
+            <div class="field-group checkbox-field">
+              <label for="interest-only-toggle">
+                <span>Pay only interest during selected period</span>
+                <input id="interest-only-toggle" name="interestOnly" type="checkbox" />
+              </label>
+            </div>
+
+            <div class="field-group">
+              <label for="interest-only-months">
+                Interest-only period
+                <span class="value-pill" id="interest-only-months-value">0 months</span>
+              </label>
+              <input id="interest-only-months-range" type="range" min="0" max="24" step="1" value="0" />
+              <input id="interest-only-months" name="interestOnlyMonths" type="number" min="0" max="24" step="1" value="0" required />
+            </div>
+
+            <div class="field-group">
+              <label for="advance-payment">
+                Advance payment
+                <span class="value-pill" id="advance-payment-value">₹0</span>
+              </label>
+              <input id="advance-payment-range" type="range" min="0" max="50000000" step="10000" value="0" />
+              <input id="advance-payment" name="advancePayment" type="number" min="0" max="50000000" step="10000" value="0" />
+            </div>
           </div>
 
           <div class="actions">
@@ -97,7 +122,7 @@
         <div class="chart-wrap">
           <canvas id="summary-chart" width="420" height="220"></canvas>
         </div>
-        <p class="note">This estimate uses standard EMI calculations and capitalizes interest during the selected grace period.</p>
+        <p class="note">This estimate uses standard EMI calculations and applies interest-only or grace-period handling when selected.</p>
       </section>
 
       <section class="card schedule-card">
