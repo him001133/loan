@@ -67,6 +67,24 @@ body {
   font-weight: 700;
 }
 
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 18px;
+}
+
+.nav-list a {
+  color: #fff;
+  opacity: 0.95;
+}
+
 .page-shell {
   max-width: 1160px;
   margin: 0 auto;
@@ -425,4 +443,38 @@ tr:last-child td {
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+.site-footer {
+  margin-top: 28px;
+  background: linear-gradient(180deg, #f8fbff 0%, #f2f6fb 100%);
+  border-top: 1px solid var(--border);
+  padding: 20px 24px;
+}
+
+.footer-grid {
+  max-width: 1160px;
+  margin: 0 auto;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-links a {
+  margin-right: 12px;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.footer-legal p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.brand-mark.small {
+  width: 36px;
+  height: 36px;
+  font-size: 1rem;
 }
