@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Timezone Calculator | EduLoan Planner</title>
+    <meta
+      name="description"
+      content="Convert time between different timezones. Useful for coordinating across regions."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand-block">
+        <div class="brand-mark">₹</div>
+        <div>
+          <p class="brand-name">EduLoan Planner</p>
+          <p class="brand-tag">Indian education finance made simpler</p>
+        </div>
+      </div>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li><a class="nav-link" href="index.html#features">Features</a></li>
+          <li><a class="nav-link" href="index.html#comparison">Compare</a></li>
+          <li><a class="nav-link" href="index.html#calculator">Calculator</a></li>
+          <li><a class="nav-link" href="index.html#schedule">Schedule</a></li>
+          <li><a class="nav-link" href="timezone.html">Timezone</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="page-shell">
+      <section class="card hero-card">
+        <div class="hero-content">
+          <div>
+            <p class="eyebrow">Timezone utilities</p>
+            <h1>Convert time across timezones</h1>
+            <p class="hero-copy">
+              Easily convert your local time to different timezones. Useful for coordinating study groups, calls, or deadline tracking across regions.
+            </p>
+          </div>
+          <div class="hero-badge">
+            <p>Quick conversion</p>
+            <strong id="current-time">--:--</strong>
+            <span>in your timezone</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card timezone-card">
+        <div class="section-heading">
+          <p class="eyebrow">Timezone converter</p>
+          <h2>Convert your time</h2>
+        </div>
+        <div class="timezone-grid">
+          <div class="timezone-controls">
+            <label for="tz-datetime">Your local date & time</label>
+            <input id="tz-datetime" type="datetime-local" />
+
+            <label for="tz-target">Target timezone</label>
+            <select id="tz-target"></select>
+
+            <div class="actions">
+              <button id="tz-convert" type="button">Convert</button>
+              <button id="tz-now" type="button" class="secondary-btn">Show current in timezone</button>
+            </div>
+          </div>
+
+          <div class="timezone-output">
+            <p class="result-label">Converted time</p>
+            <strong id="tz-output">—</strong>
+            <p class="note">Converts from your browser local time to the selected timezone.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card timezone-reference-card">
+        <div class="section-heading">
+          <p class="eyebrow">Common timezones</p>
+          <h2>Reference times</h2>
+        </div>
+        <div id="timezone-reference" class="timezone-reference-grid"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand-mark small">₹</div>
+          <div>
+            <p class="brand-name">EduLoan Planner</p>
+            <p class="brand-tag">Made for students in India</p>
+          </div>
+        </div>
+        <div class="footer-links">
+          <a href="index.html#features">Features</a>
+          <a href="index.html#calculator">Calculator</a>
+          <a href="index.html#comparison">Compare</a>
+          <a href="timezone.html">Timezone</a>
+        </div>
+        <div class="footer-legal">
+          <p>© 2026 EduLoan Planner. For planning only — not financial advice.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

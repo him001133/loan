@@ -353,16 +353,53 @@ function showNowInTimezone() {
   tzOutput.textContent = formatInZone(now, target);
 }
 
-populateTimezones();
-// set default datetime to now (local)
-(function setDefaultDatetime() {
-  const now = new Date();
-  const tzLocal = now.toISOString().slice(0,16);
-  tzDatetime.value = tzLocal;
-})();
+// Only run timezone code if on timezone page
+if (tzSelect && tzDatetime) {
+  populateTimezones();
+  
+  // set default datetime to now (local)
+  (function setDefaultDatetime() {
+    const now = new Date();
+    const tzLocal = now.toISOString().slice(0,16);
+    tzDatetime.value = tzLocal;
+  })();
 
-tzConvertBtn.addEventListener('click', convertLocalToTimezone);
-tzNowBtn.addEventListener('click', showNowInTimezone);
+  tzConvertBtn.addEventListener('click', convertLocalToTimezone);
+  tzNowBtn.addEventListener('click', showNowInTimezone);
+  
+  // Populate timezone reference grid
+  const referenceGrid = document.getElementById('timezone-reference');
+  if (referenceGrid) {
+    const referenceTzs = ['Asia/Kolkata', 'Europe/London', 'America/New_York', 'America/Los_Angeles', 'Asia/Tokyo', 'Australia/Sydney'];
+    
+    function updateReferenceGrid() {
+      referenceGrid.innerHTML = referenceTzs.map(tz => {
+        const now = new Date();
+        const time = formatInZone(now, tz);
+        return `
+          <div class="tz-ref-card">
+            <p class="tz-name">${tz}</p>
+            <strong class="tz-time">${time}</strong>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    updateReferenceGrid();
+    setInterval(updateReferenceGrid, 1000);
+  }
+  
+  // Update current time in hero
+  const currentTimeEl = document.getElementById('current-time');
+  if (currentTimeEl) {
+    function updateCurrentTime() {
+      const now = new Date();
+      currentTimeEl.textContent = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false });
+    }
+    updateCurrentTime();
+    setInterval(updateCurrentTime, 1000);
+  }
+}
 
 // Loan Comparison Tool
 const saveScenarioBtn = document.getElementById('save-scenario-btn');
