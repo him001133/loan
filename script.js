@@ -401,227 +401,229 @@ if (tzSelect && tzDatetime) {
   }
 }
 
-// Loan Comparison Tool
-const saveScenarioBtn = document.getElementById('save-scenario-btn');
-const clearScenariosBtn = document.getElementById('clear-scenarios-btn');
-const scenariosContainer = document.getElementById('scenarios-container');
-const comparisonTable = document.getElementById('comparison-table');
-const comparisonBody = document.getElementById('comparison-body');
+// Loan Comparison Tool - only runs on index.html page
+if (document.getElementById('save-scenario-btn')) {
+  const saveScenarioBtn = document.getElementById('save-scenario-btn');
+  const clearScenariosBtn = document.getElementById('clear-scenarios-btn');
+  const scenariosContainer = document.getElementById('scenarios-container');
+  const comparisonTable = document.getElementById('comparison-table');
+  const comparisonBody = document.getElementById('comparison-body');
 
-let scenarios = JSON.parse(localStorage.getItem('loanScenarios')) || [];
+  let scenarios = JSON.parse(localStorage.getItem('loanScenarios')) || [];
 
-function getCurrentScenario() {
-  const formData = new FormData(form);
-  return {
-    loanAmount: Number(formData.get('loanAmount')),
-    interestRate: Number(formData.get('interestRate')),
-    tenureYears: Number(formData.get('tenureYears')),
-    graceMonths: Number(formData.get('graceMonths')),
-    interestOnlyMonths: Number(formData.get('interestOnlyMonths')),
-    advancePayment: Number(formData.get('advancePayment')),
-    interestOnlyEnabled: interestOnlyToggle.checked,
-  };
-}
-
-function calculateScenarioResults(scenario) {
-  const { loanAmount, interestRate, tenureYears, graceMonths, interestOnlyMonths, advancePayment, interestOnlyEnabled } = scenario;
-  const plan = buildSchedule(loanAmount, interestRate, tenureYears, graceMonths, interestOnlyEnabled, interestOnlyMonths, advancePayment);
-  const emi = calculateEmi(loanAmount, interestRate, tenureYears * 12);
-  
-  return {
-    emi: plan.repaymentEmi || emi,
-    totalInterest: plan.totalInterest,
-    totalPayable: plan.totalPayable,
-    effectivePrincipal: plan.effectivePrincipal,
-  };
-}
-
-function saveScenario() {
-  if (scenarios.length >= 3) {
-    alert('You can only compare up to 3 scenarios. Clear scenarios to add more.');
-    return;
+  function getCurrentScenario() {
+    const formData = new FormData(form);
+    return {
+      loanAmount: Number(formData.get('loanAmount')),
+      interestRate: Number(formData.get('interestRate')),
+      tenureYears: Number(formData.get('tenureYears')),
+      graceMonths: Number(formData.get('graceMonths')),
+      interestOnlyMonths: Number(formData.get('interestOnlyMonths')),
+      advancePayment: Number(formData.get('advancePayment')),
+      interestOnlyEnabled: interestOnlyToggle.checked,
+    };
   }
-  
-  const scenario = getCurrentScenario();
-  const results = calculateScenarioResults(scenario);
-  
-  scenarios.push({
-    id: Date.now(),
-    timestamp: new Date().toLocaleString('en-IN'),
-    scenario,
-    results,
-    name: `Scenario ${scenarios.length + 1}`,
-  });
-  
-  localStorage.setItem('loanScenarios', JSON.stringify(scenarios));
-  renderScenarios();
-  updateComparisonTable();
-}
 
-function removeScenario(id) {
-  scenarios = scenarios.filter(s => s.id !== id);
-  localStorage.setItem('loanScenarios', JSON.stringify(scenarios));
-  renderScenarios();
-  updateComparisonTable();
-}
+  function calculateScenarioResults(scenario) {
+    const { loanAmount, interestRate, tenureYears, graceMonths, interestOnlyMonths, advancePayment, interestOnlyEnabled } = scenario;
+    const plan = buildSchedule(loanAmount, interestRate, tenureYears, graceMonths, interestOnlyEnabled, interestOnlyMonths, advancePayment);
+    const emi = calculateEmi(loanAmount, interestRate, tenureYears * 12);
+    
+    return {
+      emi: plan.repaymentEmi || emi,
+      totalInterest: plan.totalInterest,
+      totalPayable: plan.totalPayable,
+      effectivePrincipal: plan.effectivePrincipal,
+    };
+  }
 
-function clearAllScenarios() {
-  if (confirm('Clear all saved scenarios?')) {
-    scenarios = [];
-    localStorage.removeItem('loanScenarios');
+  function saveScenario() {
+    if (scenarios.length >= 3) {
+      alert('You can only compare up to 3 scenarios. Clear scenarios to add more.');
+      return;
+    }
+    
+    const scenario = getCurrentScenario();
+    const results = calculateScenarioResults(scenario);
+    
+    scenarios.push({
+      id: Date.now(),
+      timestamp: new Date().toLocaleString('en-IN'),
+      scenario,
+      results,
+      name: `Scenario ${scenarios.length + 1}`,
+    });
+    
+    localStorage.setItem('loanScenarios', JSON.stringify(scenarios));
     renderScenarios();
     updateComparisonTable();
   }
-}
 
-function renderScenarios() {
-  if (scenarios.length === 0) {
-    scenariosContainer.innerHTML = '<div class="empty-state"><p>Save your first scenario to start comparing loans.</p></div>';
-    return;
+  function removeScenario(id) {
+    scenarios = scenarios.filter(s => s.id !== id);
+    localStorage.setItem('loanScenarios', JSON.stringify(scenarios));
+    renderScenarios();
+    updateComparisonTable();
   }
-  
-  scenariosContainer.innerHTML = scenarios.map((s, index) => `
-    <div class="scenario-card">
-      <div class="scenario-header">
-        <h4>${s.name}</h4>
-        <div class="scenario-meta">${s.timestamp}</div>
-      </div>
-      <div class="scenario-details">
-        <div class="scenario-detail">
-          <span class="label">Loan Amount</span>
-          <span class="value">${formatCurrency(s.scenario.loanAmount)}</span>
-        </div>
-        <div class="scenario-detail">
-          <span class="label">Interest Rate</span>
-          <span class="value">${s.scenario.interestRate.toFixed(1)}%</span>
-        </div>
-        <div class="scenario-detail">
-          <span class="label">Tenure</span>
-          <span class="value">${s.scenario.tenureYears} year${s.scenario.tenureYears === 1 ? '' : 's'}</span>
-        </div>
-        <div class="scenario-detail">
-          <span class="label">Grace Period</span>
-          <span class="value">${s.scenario.graceMonths} month${s.scenario.graceMonths === 1 ? '' : 's'}</span>
-        </div>
-      </div>
-      <div class="scenario-results">
-        <div class="result">
-          <span class="label">Monthly EMI</span>
-          <strong>${formatCurrency(s.results.emi)}</strong>
-        </div>
-        <div class="result">
-          <span class="label">Total Interest</span>
-          <strong>${formatCurrency(s.results.totalInterest)}</strong>
-        </div>
-        <div class="result">
-          <span class="label">Total Payable</span>
-          <strong>${formatCurrency(s.results.totalPayable)}</strong>
-        </div>
-      </div>
-      <button class="remove-scenario-btn" onclick="window.removeScenarioCompare(${s.id})">Remove</button>
-    </div>
-  `).join('');
-}
 
-function updateComparisonTable() {
-  if (scenarios.length < 2) {
-    comparisonTable.style.display = 'none';
-    return;
-  }
-  
-  comparisonTable.style.display = 'block';
-  
-  // Update headers
-  for (let i = 1; i <= 3; i++) {
-    const header = document.getElementById(`scenario-${i}-header`);
-    if (i <= scenarios.length) {
-      header.textContent = scenarios[i - 1].name;
-      header.style.display = '';
-    } else {
-      header.style.display = 'none';
+  function clearAllScenarios() {
+    if (confirm('Clear all saved scenarios?')) {
+      scenarios = [];
+      localStorage.removeItem('loanScenarios');
+      renderScenarios();
+      updateComparisonTable();
     }
   }
-  
-  const metrics = [
-    { label: 'Loan Amount', key: 'loanAmount', type: 'currency' },
-    { label: 'Interest Rate', key: 'interestRate', type: 'rate' },
-    { label: 'Tenure', key: 'tenureYears', type: 'years' },
-    { label: 'Grace Period', key: 'graceMonths', type: 'months' },
-    { label: 'Monthly EMI', resultKey: 'emi', type: 'currency' },
-    { label: 'Total Interest', resultKey: 'totalInterest', type: 'currency' },
-    { label: 'Total Payable', resultKey: 'totalPayable', type: 'currency' },
-  ];
-  
-  comparisonBody.innerHTML = metrics.map(metric => {
-    let row = `<tr><td>${metric.label}</td>`;
+
+  function renderScenarios() {
+    if (scenarios.length === 0) {
+      scenariosContainer.innerHTML = '<div class="empty-state"><p>Save your first scenario to start comparing loans.</p></div>';
+      return;
+    }
     
-    for (let i = 0; i < 3; i++) {
-      if (i < scenarios.length) {
-        let value;
-        if (metric.resultKey) {
-          value = scenarios[i].results[metric.resultKey];
-        } else {
-          value = scenarios[i].scenario[metric.key];
-        }
-        
-        let formatted;
-        if (metric.type === 'currency') {
-          formatted = formatCurrency(value);
-        } else if (metric.type === 'rate') {
-          formatted = `${value.toFixed(1)}%`;
-        } else if (metric.type === 'years') {
-          formatted = `${value} year${value === 1 ? '' : 's'}`;
-        } else if (metric.type === 'months') {
-          formatted = `${value} month${value === 1 ? '' : 's'}`;
-        }
-        
-        row += `<td>${formatted}</td>`;
+    scenariosContainer.innerHTML = scenarios.map((s, index) => `
+      <div class="scenario-card">
+        <div class="scenario-header">
+          <h4>${s.name}</h4>
+          <div class="scenario-meta">${s.timestamp}</div>
+        </div>
+        <div class="scenario-details">
+          <div class="scenario-detail">
+            <span class="label">Loan Amount</span>
+            <span class="value">${formatCurrency(s.scenario.loanAmount)}</span>
+          </div>
+          <div class="scenario-detail">
+            <span class="label">Interest Rate</span>
+            <span class="value">${s.scenario.interestRate.toFixed(1)}%</span>
+          </div>
+          <div class="scenario-detail">
+            <span class="label">Tenure</span>
+            <span class="value">${s.scenario.tenureYears} year${s.scenario.tenureYears === 1 ? '' : 's'}</span>
+          </div>
+          <div class="scenario-detail">
+            <span class="label">Grace Period</span>
+            <span class="value">${s.scenario.graceMonths} month${s.scenario.graceMonths === 1 ? '' : 's'}</span>
+          </div>
+        </div>
+        <div class="scenario-results">
+          <div class="result">
+            <span class="label">Monthly EMI</span>
+            <strong>${formatCurrency(s.results.emi)}</strong>
+          </div>
+          <div class="result">
+            <span class="label">Total Interest</span>
+            <strong>${formatCurrency(s.results.totalInterest)}</strong>
+          </div>
+          <div class="result">
+            <span class="label">Total Payable</span>
+            <strong>${formatCurrency(s.results.totalPayable)}</strong>
+          </div>
+        </div>
+        <button class="remove-scenario-btn" onclick="window.removeScenarioCompare(${s.id})">Remove</button>
+      </div>
+    `).join('');
+  }
+
+  function updateComparisonTable() {
+    if (scenarios.length < 2) {
+      comparisonTable.style.display = 'none';
+      return;
+    }
+    
+    comparisonTable.style.display = 'block';
+    
+    // Update headers
+    for (let i = 1; i <= 3; i++) {
+      const header = document.getElementById(`scenario-${i}-header`);
+      if (i <= scenarios.length) {
+        header.textContent = scenarios[i - 1].name;
+        header.style.display = '';
       } else {
-        row += '<td>—</td>';
+        header.style.display = 'none';
       }
     }
     
-    return row + '</tr>';
-  }).join('');
-}
-
-function loadScenarioToForm(scenarioId) {
-  const scenario = scenarios.find(s => s.id === scenarioId);
-  if (!scenario) return;
-  
-  const s = scenario.scenario;
-  document.getElementById('loan-amount').value = s.loanAmount;
-  document.getElementById('interest-rate').value = s.interestRate;
-  document.getElementById('tenure-years').value = s.tenureYears;
-  document.getElementById('grace-months').value = s.graceMonths;
-  document.getElementById('interest-only-months').value = s.interestOnlyMonths;
-  document.getElementById('advance-payment').value = s.advancePayment;
-  interestOnlyToggle.checked = s.interestOnlyEnabled;
-  interestOnlyMonthsInput.disabled = !s.interestOnlyEnabled;
-  interestOnlyMonthsRange.disabled = !s.interestOnlyEnabled;
-  
-  controls.forEach(syncControl);
-  updateResults();
-  
-  // Scroll to calculator
-  document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
-}
-
-// Global function for onclick handler
-window.removeScenarioCompare = removeScenario;
-
-saveScenarioBtn.addEventListener('click', saveScenario);
-clearScenariosBtn.addEventListener('click', clearAllScenarios);
-
-// Add double-click to load scenario
-scenariosContainer.addEventListener('dblclick', (e) => {
-  const card = e.target.closest('.scenario-card');
-  if (card && !e.target.closest('button')) {
-    const scenarioId = scenarios[Array.from(scenariosContainer.querySelectorAll('.scenario-card')).indexOf(card)].id;
-    loadScenarioToForm(scenarioId);
+    const metrics = [
+      { label: 'Loan Amount', key: 'loanAmount', type: 'currency' },
+      { label: 'Interest Rate', key: 'interestRate', type: 'rate' },
+      { label: 'Tenure', key: 'tenureYears', type: 'years' },
+      { label: 'Grace Period', key: 'graceMonths', type: 'months' },
+      { label: 'Monthly EMI', resultKey: 'emi', type: 'currency' },
+      { label: 'Total Interest', resultKey: 'totalInterest', type: 'currency' },
+      { label: 'Total Payable', resultKey: 'totalPayable', type: 'currency' },
+    ];
+    
+    comparisonBody.innerHTML = metrics.map(metric => {
+      let row = `<tr><td>${metric.label}</td>`;
+      
+      for (let i = 0; i < 3; i++) {
+        if (i < scenarios.length) {
+          let value;
+          if (metric.resultKey) {
+            value = scenarios[i].results[metric.resultKey];
+          } else {
+            value = scenarios[i].scenario[metric.key];
+          }
+          
+          let formatted;
+          if (metric.type === 'currency') {
+            formatted = formatCurrency(value);
+          } else if (metric.type === 'rate') {
+            formatted = `${value.toFixed(1)}%`;
+          } else if (metric.type === 'years') {
+            formatted = `${value} year${value === 1 ? '' : 's'}`;
+          } else if (metric.type === 'months') {
+            formatted = `${value} month${value === 1 ? '' : 's'}`;
+          }
+          
+          row += `<td>${formatted}</td>`;
+        } else {
+          row += '<td>—</td>';
+        }
+      }
+      
+      return row + '</tr>';
+    }).join('');
   }
-});
 
-// Initial render
-renderScenarios();
-updateComparisonTable();
+  function loadScenarioToForm(scenarioId) {
+    const scenario = scenarios.find(s => s.id === scenarioId);
+    if (!scenario) return;
+    
+    const s = scenario.scenario;
+    document.getElementById('loan-amount').value = s.loanAmount;
+    document.getElementById('interest-rate').value = s.interestRate;
+    document.getElementById('tenure-years').value = s.tenureYears;
+    document.getElementById('grace-months').value = s.graceMonths;
+    document.getElementById('interest-only-months').value = s.interestOnlyMonths;
+    document.getElementById('advance-payment').value = s.advancePayment;
+    interestOnlyToggle.checked = s.interestOnlyEnabled;
+    interestOnlyMonthsInput.disabled = !s.interestOnlyEnabled;
+    interestOnlyMonthsRange.disabled = !s.interestOnlyEnabled;
+    
+    controls.forEach(syncControl);
+    updateResults();
+    
+    // Scroll to calculator
+    document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Global function for onclick handler
+  window.removeScenarioCompare = removeScenario;
+
+  saveScenarioBtn.addEventListener('click', saveScenario);
+  clearScenariosBtn.addEventListener('click', clearAllScenarios);
+
+  // Add double-click to load scenario
+  scenariosContainer.addEventListener('dblclick', (e) => {
+    const card = e.target.closest('.scenario-card');
+    if (card && !e.target.closest('button')) {
+      const scenarioId = scenarios[Array.from(scenariosContainer.querySelectorAll('.scenario-card')).indexOf(card)].id;
+      loadScenarioToForm(scenarioId);
+    }
+  });
+
+  // Initial render
+  renderScenarios();
+  updateComparisonTable();
+}
